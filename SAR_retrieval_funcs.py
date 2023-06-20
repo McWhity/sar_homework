@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.optimize
 import scipy.stats
-
+import pdb
 
 def wcm_jac(A, V1, B, V2, C, sigma_soil, theta=23):
     """WCM model and jacobian calculations. The main
@@ -267,9 +267,10 @@ def prepare_field_data(field, df, df_s2, ignore_orbits=True):
         s2_cbrown = np.interp(
             df[f"doy_{field:s}"][passer1], df_s2.doy, df_s2[f"cbrown_{field:s}"]
         )
+        lai = np.interp(df[f"doy_{field:s}"][passer1], df[f"doy_{field:s}"], df[f"LAI_{field:s}"])
         doy = df[f"doy_{field:s}"][passer1].values
         return (doy, passer1, n_obs, svv, svh, theta,
-                             s2_lai, s2_cab, s2_cbrown)
+                             s2_lai, s2_cab, s2_cbrown,lai)
 
     else:
         orbits = np.unique(df[f"relativeorbit_{field:s}"].values)
@@ -293,8 +294,9 @@ def prepare_field_data(field, df, df_s2, ignore_orbits=True):
                 df[f"doy_{field:s}"][passer], df_s2.doy, df_s2[f"cbrown_{field:s}"]
             )
             doy = df[f"doy_{field:s}"][passer].values
+            lai = np.interp(df[f"doy_{field:s}"][passer], df[f"doy_{field:s}"], df[f"LAI_{field:s}"])
             orbit_data[orbit] = [doy, passer, n_obs, svv, svh, theta,
-                                 s2_lai, s2_cab, s2_cbrown]
+                                 s2_lai, s2_cab, s2_cbrown,lai]
         return orbit_data
 
 
